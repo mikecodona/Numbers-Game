@@ -16,7 +16,7 @@ def evaltree(tree, i=1):
         else:
             return 0
     else:
-        print "Something cocked up"
+        print "Doing something wrong"
 
 def strtree(tree, i=1):
     if type(tree[i]) == type(1):
@@ -24,7 +24,7 @@ def strtree(tree, i=1):
     elif tree[i] in ['+', '-', '*', '/']:
         return "(" + strtree(tree, left(i)) + " " + tree[i] + " " + strtree(tree, right(i)) + ")"
     else:
-        print "Something cocked up"
+        print "Doing something wrong"
 
 """ Takes a tree as input and returns a list of new trees """
 """ expand([None, 1], [2]) returns [None, '+', 1, 2] """
