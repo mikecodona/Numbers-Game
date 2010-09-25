@@ -5,7 +5,6 @@ class InvalidTreeError(Exception):
     pass
 
 class Solution():
-
     s_value = None 
 
     def __init__(self, numbers, tree=None):
@@ -51,10 +50,9 @@ class Solution():
         elif current_node in ['+', '-', '*', '/']:
             return "(" + self.strtree(left(i)) + " " + current_node + " " + self.strtree(right(i)) + ")"
         else:
-            print "Doing something wrong"
+            raise Exception('Malformed solution tree')
 
-    """ Takes a tree as input and returns a list of new trees """
-    """ expand([None, 1], [2]) returns [None, '+', 1, 2] """
+    """ Returns a list of all the solutions expanded from this one """
     def expand(self):
         solutions = []
         operators = ['+', '-', '*', '/']
@@ -91,7 +89,7 @@ class Solution():
                     solution = Solution(numbers, tree)
                     
                     # Calculate value of new solution.
-                    # We catch any exception in evaluating
+                    # We catch InvalidTreeError in evaluating
                     # the solution, this removes divide by
                     # 0 or solutions which depend on non-integer
                     # division.
@@ -118,9 +116,9 @@ def main():
         findsolution(numbers, target)
 
 
-""" Find solution takes a list of numbers and tries to find a solution """
+""" Find solution takes a list of numbers and a target then tries to find a
+solution """
 def findsolution(numbers, target):
-    numbers.reverse()
     solutions = Solution(numbers).expand()
 
     best = solutions[0]
@@ -134,7 +132,7 @@ def findsolution(numbers, target):
         if solutions[0].value() == target:
             return
 
-        # Only work on the best 100 solutions
+        # Only work on the best 1000 solutions
         if len(solutions) > 1000:
             solutions = solutions[:1000]
         
