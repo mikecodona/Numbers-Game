@@ -29,7 +29,7 @@ class Solution():
             left_val = self.evaltree(left(i))
             right_val = self.evaltree(right(i))
             if left_val > right_val:
-                return left_val / right_val
+                return left_val - right_val
             else:
                 raise InvalidTreeError('Invalid solution tree')
         elif current_node == '*':
