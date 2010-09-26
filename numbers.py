@@ -26,7 +26,12 @@ class Solution():
         elif current_node == '+':
             return self.evaltree(left(i)) + self.evaltree(right(i))
         elif current_node == '-':
-            return self.evaltree(left(i)) - self.evaltree(right(i))
+            left_val = self.evaltree(left(i))
+            right_val = self.evaltree(right(i))
+            if left_val > right_val:
+                return left_val / right_val
+            else:
+                raise InvalidTreeError('Invalid solution tree')
         elif current_node == '*':
             return self.evaltree(left(i)) * self.evaltree(right(i))
         elif current_node == '/':
@@ -62,7 +67,8 @@ class Solution():
             for n in self.numbers:
                 numbers = self.numbers[:]
                 numbers.remove(n)
-                solutions.append(Solution(numbers, [None, n]))
+                solutions.append(Solution(numbers, [None, n] + 
+                                          [None] * pow(2, len(numbers) + 1)))
             
             return solutions
 
@@ -77,7 +83,6 @@ class Solution():
             for o in operators:
                 for n in self.numbers: 
                     tree = self.tree[:]
-                    tree.extend([None] * (len(self.tree) + 1))
 
                     tree[l] = o 
                     tree[left(l)] = self.tree[l]
@@ -114,6 +119,14 @@ def main():
 
         print numbers, target
         findsolution(numbers, target)
+    else:
+        findsolution([25, 50, 75, 100, 3, 6], 952)
+
+def best(solutions, num):
+    best_solutions = [None] * 25
+    for s in solutions:
+        num = 0
+        
 
 
 """ Find solution takes a list of numbers and a target then tries to find a
@@ -125,19 +138,20 @@ def findsolution(numbers, target):
 
     start = datetime.now()
      
-    while (datetime.now() - start).seconds < 29:
+    while True:#(datetime.now() - start).seconds < 29:
         solutions.sort(key=lambda sol: distance(sol.value(), target))
-        print solutions[0]
 
         if solutions[0].value() == target:
             return
 
-        # Only work on the best 1000 solutions
-        if len(solutions) > 1000:
-            solutions = solutions[:1000]
+        if distance(solutions[0].value(), target) < distance(best.value(), target):
+            best = solutions[0]
         
+        print best, len(solutions)
+
         new = []
-        for s in solutions:
+        for s in solutions[:1000]:
+            solutions.remove(s)
             new.extend(s.expand())
 
         solutions.extend(new)
@@ -147,5 +161,10 @@ def distance(value, target):
     return abs(value - target)
 
 if __name__ == '__main__':
-    main()
+    
+#   import hotshot
+#   prof = hotshot.Profile("hotshot_edi_stats")
+#   prof.runcall(main)
+#   prof.close()
 
+    main()
