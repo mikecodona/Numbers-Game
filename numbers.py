@@ -23,20 +23,31 @@ class Solution():
 
         if type(current_node) == type(1):
             return current_node 
-        elif current_node == '+':
-            return self.evaltree(left(i)) + self.evaltree(right(i))
+
+        
+        left_val = self.evaltree(left(i))
+        right_val = self.evaltree(right(i))
+
+        if current_node == '+':
+            # We enfore ordering here to cut search space
+            if left_val >= right_val:
+                return left_val + right_val
+            else:
+                raise InvalidTreeError('Invalid solution tree')
+        elif current_node == '*':
+            # We enfore ordering here to cut search space
+            if left_val >= right_val:
+                return left_val * right_val
+            else:
+                raise InvalidTreeError('Invalid solution tree')
         elif current_node == '-':
-            left_val = self.evaltree(left(i))
-            right_val = self.evaltree(right(i))
+            # Not allowed negative intermediate result or 0
             if left_val > right_val:
                 return left_val - right_val
             else:
                 raise InvalidTreeError('Invalid solution tree')
-        elif current_node == '*':
-            return self.evaltree(left(i)) * self.evaltree(right(i))
         elif current_node == '/':
-            left_val = self.evaltree(left(i))
-            right_val = self.evaltree(right(i))
+            # Cannot divide by 0 or do non integer division
             if right_val > 0 and left_val % right_val == 0:
                 return left_val / right_val
             else:
