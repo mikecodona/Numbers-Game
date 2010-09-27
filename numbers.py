@@ -18,12 +18,14 @@ class Solution():
 
     def evaltree(self, i=1):
         current_node = self.tree[i]
-
         if type(current_node) == type(1):
             return current_node 
         
-        left_val = self.evaltree(left(i))
-        right_val = self.evaltree(right(i))
+        left = i * 2
+        right = i * 2 + 1
+
+        left_val = self.evaltree(left)
+        right_val = self.evaltree(right)
 
         # Thowing an exception is costly as the stack can be
         # deep in this recursive funtion so instead return None
