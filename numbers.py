@@ -34,24 +34,28 @@ class Solution():
             return None
 
         if current_node == '+':
+            if self.tree[right] in ['+', '-']: return None
             # We enfore ordering here to cut search space
             if left_val >= right_val:
                 return left_val + right_val
             else:
                 return None
         elif current_node == '*':
+            if self.tree[right] == '*' or self.tree[left] == '/': return None
             # We enfore ordering here to cut search space
             if left_val >= right_val:
                 return left_val * right_val
             else:
                 return None
         elif current_node == '-':
+            if self.tree[right] in ['+', '-']: return None
             # Not allowed negative intermediate result or 0
             if left_val > right_val:
                 return left_val - right_val
             else:
                 return None
         elif current_node == '/':
+            if self.tree[right] == '*': return None
             # Cannot divide by 0 or do non integer division
             if right_val > 0 and left_val % right_val == 0:
                 return left_val / right_val
