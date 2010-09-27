@@ -1,9 +1,6 @@
 from datetime import datetime
 import sys
 
-class InvalidTreeError(Exception):
-    pass
-
 class Solution():
     s_value = None 
 
@@ -23,37 +20,39 @@ class Solution():
 
         if type(current_node) == type(1):
             return current_node 
-
         
         left_val = self.evaltree(left(i))
         right_val = self.evaltree(right(i))
+
+        # Thowing an exception is costly as the stack can be
+        # deep in this recursive funtion so instead we return None
+        if not left_val or not right_val:
+            return None
 
         if current_node == '+':
             # We enfore ordering here to cut search space
             if left_val >= right_val:
                 return left_val + right_val
             else:
-                raise InvalidTreeError('Invalid solution tree')
+                return None
         elif current_node == '*':
             # We enfore ordering here to cut search space
             if left_val >= right_val:
                 return left_val * right_val
             else:
-                raise InvalidTreeError('Invalid solution tree')
+                return None
         elif current_node == '-':
             # Not allowed negative intermediate result or 0
             if left_val > right_val:
                 return left_val - right_val
             else:
-                raise InvalidTreeError('Invalid solution tree')
+                return None
         elif current_node == '/':
             # Cannot divide by 0 or do non integer division
             if right_val > 0 and left_val % right_val == 0:
                 return left_val / right_val
             else:
-                raise InvalidTreeError('Invalid solution tree')
-        else:
-            raise Exception('Malformed solution tree')
+                return None
 
     def __str__(self):
         return self.strtree() + " = " + str(self.value())
@@ -109,11 +108,8 @@ class Solution():
                     # the solution, this removes divide by
                     # 0 or solutions which depend on non-integer
                     # division.
-                    try:
-                        solution.value()
+                    if solution.value():
                         solutions.append(solution)
-                    except InvalidTreeError as e:
-                        pass
 
         return solutions
 
