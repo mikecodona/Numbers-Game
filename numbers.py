@@ -129,7 +129,6 @@ def main():
         numbers = map(int, sys.argv[1:7])
         target = int(sys.argv[7])
 
-        print numbers, target
         findsolution(numbers, target)
     else:
         findsolution([25, 50, 75, 100, 3, 6], 952)
