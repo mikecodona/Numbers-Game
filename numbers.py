@@ -152,10 +152,10 @@ def findsolution(numbers, target):
 
     start = datetime.now()
      
-    while True:#(datetime.now() - start).seconds < 29:
+    while (datetime.now() - start).seconds < 29:
         solutions.sort(key=lambda sol: distance(sol.value(), target))
 
-        if distance(solutions[0].value(), target) < distance(best.value(), target):
+        if distance(solutions[0].value(), target) <= distance(best.value(), target):
             best = solutions[0]
         
         print best, len(solutions)
