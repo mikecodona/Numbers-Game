@@ -25,7 +25,7 @@ class Solution():
         right_val = self.evaltree(right(i))
 
         # Thowing an exception is costly as the stack can be
-        # deep in this recursive funtion so instead we return None
+        # deep in this recursive funtion so instead return None
         if not left_val or not right_val:
             return None
 
@@ -104,10 +104,7 @@ class Solution():
                     solution = Solution(numbers, tree)
                     
                     # Calculate value of new solution.
-                    # We catch InvalidTreeError in evaluating
-                    # the solution, this removes divide by
-                    # 0 or solutions which depend on non-integer
-                    # division.
+                    # If it is invalid value will return None
                     if solution.value():
                         solutions.append(solution)
 
