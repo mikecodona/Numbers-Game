@@ -2,7 +2,7 @@ from datetime import datetime
 import sys
 
 class Solution():
-    s_value = None 
+    s_value = None
     leaves = []
 
     def __init__(self, numbers, tree=None):
@@ -175,4 +175,11 @@ def distance(value, target):
     return abs(value - target)
 
 if __name__ == '__main__':
+    # Import Psyco if available
+    try: 
+        import psyco
+        psyco.full()
+    except ImportError:
+        pass
+                                        
     main()
