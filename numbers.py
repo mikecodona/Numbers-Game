@@ -89,6 +89,11 @@ class Solution():
 
         # Expand current tree
         for l in self.leaves:
+            leaves = self.leaves[:]
+            leaves.append(left(l))
+            leaves.append(right(l))
+            leaves.remove(l)
+
             for o in operators:
                 for n in self.numbers: 
                     tree = self.tree[:]
@@ -97,16 +102,14 @@ class Solution():
                     tree[left(l)] = self.tree[l]
                     tree[right(l)] = n 
 
-
                     numbers = self.numbers[:]
                     numbers.remove(n)
 
                     solution = Solution(numbers, tree)
 
-                    solution.leaves = self.leaves[:]
-                    solution.leaves.append(left(l))
-                    solution.leaves.append(right(l))
-                    solution.leaves.remove(l)
+                    # We don't have to deepcopy this because all solutions
+                    # Will have same leaf nodes
+                    solution.leaves = leaves
                     
                     # Calculate value of new solution.
                     # If it is invalid value will return None
