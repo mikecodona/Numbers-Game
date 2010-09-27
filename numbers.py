@@ -173,10 +173,4 @@ def distance(value, target):
     return abs(value - target)
 
 if __name__ == '__main__':
-    
-#   import hotshot
-#   prof = hotshot.Profile("hotshot_edi_stats")
-#   prof.runcall(main)
-#   prof.close()
-
     main()
