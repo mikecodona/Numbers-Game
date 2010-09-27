@@ -21,6 +21,7 @@ class Solution():
         if type(current_node) == type(1):
             return current_node 
         
+        # Calculate these here to avoid function call overhead
         left = i * 2
         right = i * 2 + 1
 
