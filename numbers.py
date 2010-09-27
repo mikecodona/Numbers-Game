@@ -3,6 +3,7 @@ import sys
 
 class Solution():
     s_value = None 
+    leaves = []
 
     def __init__(self, numbers, tree=None):
         self.numbers = numbers
@@ -77,19 +78,17 @@ class Solution():
             for n in self.numbers:
                 numbers = self.numbers[:]
                 numbers.remove(n)
-                solutions.append(Solution(numbers, [None, n] + 
-                                          [None] * pow(2, len(numbers) + 1)))
+
+                solution = Solution(numbers, [None, n] + 
+                                          [None] * pow(2, len(numbers) + 1))
+
+                solution.leaves = [1]
+                solutions.append(solution)
             
             return solutions
 
-        # Find all leaf nodes
-        leaves = []
-        for i in xrange(len(self.tree)):
-            if type(self.tree[i]) == type(1):
-                 leaves.append(i)
-
         # Expand current tree
-        for l in leaves:
+        for l in self.leaves:
             for o in operators:
                 for n in self.numbers: 
                     tree = self.tree[:]
@@ -98,10 +97,16 @@ class Solution():
                     tree[left(l)] = self.tree[l]
                     tree[right(l)] = n 
 
+
                     numbers = self.numbers[:]
                     numbers.remove(n)
 
                     solution = Solution(numbers, tree)
+
+                    solution.leaves = self.leaves[:]
+                    solution.leaves.append(left(l))
+                    solution.leaves.append(right(l))
+                    solution.leaves.remove(l)
                     
                     # Calculate value of new solution.
                     # If it is invalid value will return None
