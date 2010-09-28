@@ -9,7 +9,7 @@ class Solution():
         self.numbers = numbers
         self.tree = tree
 
-    # value is memorized to avoid repeating calculation
+    # Value is memorized to avoid repeating calculation
     def value(self):
         if not self.s_value:
             self.s_value = self.evaltree()
@@ -27,40 +27,32 @@ class Solution():
 
         left_val = self.evaltree(left)
         right_val = self.evaltree(right)
+        return_val = None
 
-        # Thowing an exception is costly as the stack can be
-        # deep in this recursive funtion so instead return None
+        # Could throw an expection rather than returning None for invalid trees
+        # but propogating the exception up the call tree takes longer
         if not left_val or not right_val:
             return None
 
         if current_node == '+':
-            if self.tree[right] in ['+', '-']: return None
-            # We enfore ordering here to cut search space
-            if left_val >= right_val:
-                return left_val + right_val
-            else:
-                return None
+            # We enfore ordering and left associativity here to cut search space
+            if left_val >= right_val and not self.tree[right] in ['+', '-']:
+                return_val = left_val + right_val
         elif current_node == '*':
-            if self.tree[right] == '*' or self.tree[left] == '/': return None
-            # We enfore ordering here to cut search space
-            if left_val >= right_val:
-                return left_val * right_val
-            else:
-                return None
+            # We enfore ordering and left associativity here to cut search space
+            if left_val >= right_val and not self.tree[right] in ['*', '/']:
+                return_val = left_val * right_val
         elif current_node == '-':
-            if self.tree[right] in ['+', '-']: return None
             # Not allowed negative intermediate result or 0
-            if left_val > right_val:
-                return left_val - right_val
-            else:
-                return None
+            if left_val > right_val and not self.tree[right] in ['+','-']:
+                return_val = left_val - right_val
         elif current_node == '/':
-            if self.tree[right] == '*': return None
-            # Cannot divide by 0 or do non integer division
-            if right_val > 0 and left_val % right_val == 0:
-                return left_val / right_val
-            else:
+            if self.tree[right] in ['*', '/']: 
                 return None
+            elif right_val > 0 and left_val % right_val == 0:
+                return_val = left_val / right_val
+        
+        return return_val
 
     def __str__(self):
         return self.strtree() + " = " + str(self.value())
@@ -138,13 +130,14 @@ def main():
 
         findsolution(numbers, target)
     else:
+        # Try lots of hard problems
         findsolution([25, 50, 75, 100, 3, 6], 952)
-
-def best(solutions, num):
-    best_solutions = [None] * 25
-    for s in solutions:
-        num = 0
-        
+        findsolution([25, 6, 3, 3, 7, 50], 712)
+        findsolution([50, 2, 6, 4, 10, 4], 687)
+        findsolution([8, 75, 8, 4, 6, 10], 993)
+        findsolution([6, 2, 8, 7, 8, 4], 917)
+        findsolution([7, 8, 50, 8, 1, 3], 923)
+        findsolution([9, 6, 10, 4, 6, 2], 946)
 
 
 """ Find solution takes a list of numbers and a target then tries to find a
