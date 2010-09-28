@@ -138,13 +138,14 @@ def main():
 
         findsolution(numbers, target)
     else:
+        # Try lots of hard problems
         findsolution([25, 50, 75, 100, 3, 6], 952)
-
-def best(solutions, num):
-    best_solutions = [None] * 25
-    for s in solutions:
-        num = 0
-        
+        findsolution([25, 6, 3, 3, 7, 50], 712)
+        findsolution([50, 2, 6, 4, 10, 4], 687)
+        findsolution([8, 75, 8, 4, 6, 10], 993)
+        findsolution([6, 2, 8, 7, 8, 4], 917)
+        findsolution([7, 8, 50, 8, 1, 3], 923)
+        findsolution([9, 6, 10, 4, 6, 2], 946)
 
 
 """ Find solution takes a list of numbers and a target then tries to find a
