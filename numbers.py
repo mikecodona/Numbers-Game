@@ -9,7 +9,7 @@ class Solution():
         self.numbers = numbers
         self.tree = tree
 
-    # value is memorized to avoid repeating calculation
+    # Value is memorized to avoid repeating calculation
     def value(self):
         if not self.s_value:
             self.s_value = self.evaltree()
@@ -29,8 +29,8 @@ class Solution():
         right_val = self.evaltree(right)
         return_val = None
 
-        # Thowing an exception is costly as the stack can be
-        # deep in this recursive funtion so instead return None
+        # Could throw an expection rather than returning None for invalid trees
+        # but propogating the exception up the call tree takes longer
         if not left_val or not right_val:
             return None
 
