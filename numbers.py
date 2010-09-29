@@ -10,9 +10,6 @@ def strtree(tree, i=1):
         return ("(" + strtree(tree, left(i)) + " " 
                 + current_node + " " 
                 + strtree(tree,  right(i)) + ")")
-    else:
-        raise Exception('Malformed solution tree')
-
 
 def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
     operators = ['+', '-', '*', '/']
