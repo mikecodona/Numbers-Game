@@ -19,7 +19,6 @@ def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
     for n, i in zip(numbers, xrange(len(numbers))):
         tree[pos] = n 
         yield tree, numbers[:i] + numbers[i + 1:], n
-
     
     operators = ['/', '-','+', '*']
     is_operator = lambda t: t in operators
@@ -84,17 +83,12 @@ def main():
 """ Find solution takes a list of numbers and a target then tries to find a
 solution """
 def findsolution(numbers, target):
-    numbers.sort(reverse=True)
     trees = generate(numbers)
     
     for tree, unused, value in trees:
         if value == target:
             print "Found: " + strtree(tree), value
             return
-
-        
-
-        
 
 def distance(value, target):
     return abs(value - target)
