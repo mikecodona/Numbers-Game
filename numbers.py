@@ -1,39 +1,6 @@
 from datetime import datetime
 import sys
 
-def evaltree(tree, i=1):
-    current_node = tree[i]
-    if type(current_node) == type(1):
-        return current_node 
-    
-    # Calculate these here to avoid function call overhead
-    left = i * 2
-    right = i * 2 + 1
-
-    left_val = evaltree(tree, left)
-    right_val = evaltree(tree, right)
-    return_val = None
-
-    # Could throw an expection rather than returning None for invalid trees
-    # but propogating the exception up the call tree takes longer
-    if not left_val or not right_val:
-        return None
-
-    if current_node == '+':
-        # We enfore ordering and left associativity here to cut search space
-        return_val = left_val + right_val
-    elif current_node == '*':
-        # We enfore ordering and left associativity here to cut search space
-        return_val = left_val * right_val
-    elif current_node == '-':
-        # Not allowed negative intermediate result or 0
-        return_val = left_val - right_val
-    elif current_node == '/':
-        if right_val > 0 and left_val % right_val == 0:
-            return_val = left_val / right_val
-    
-    return return_val
-
 def strtree(tree, i=1):
     current_node = tree[i]
     
