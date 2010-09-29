@@ -56,16 +56,6 @@ def value(left_val, right_val, op):
     return val
                     
 
-
-def left(i):
-    return i * 2
-
-def right(i):
-    return i * 2 + 1
-
-def isnumber(num):
-    return type(num) == type(1)
-
 def main():
     if len(sys.argv) == 8:
         numbers = map(int, sys.argv[1:7])
