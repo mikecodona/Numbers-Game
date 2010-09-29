@@ -1,39 +1,47 @@
 from datetime import datetime
-import sys
+import sys, time
 
-def strtree(tree, i=1):
-    current_node = tree[i]
-    
+def strtree(tree, pos=1):
+    current_node = tree[pos]
+
+    left = pos * 2
+    right = pos * 2 + 1
+     
     if type(current_node) == type(1):
         return str(current_node)
     elif current_node in ['+', '-', '*', '/']:
-        return ("(" + strtree(tree, left(i)) + " " 
+        return ("(" + strtree(tree, left) + " " 
                 + current_node + " " 
-                + strtree(tree,  right(i)) + ")")
+                + strtree(tree,  right) + ")")
 
 def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
-    operators = ['+', '-', '*', '/']
-
-    if numbers == []: 
-        return
-    
+    # First yield all the numbers
     for n, i in zip(numbers, xrange(len(numbers))):
         tree[pos] = n 
         yield tree, numbers[:i] + numbers[i + 1:], n
+
     
-    if len(filter(lambda t: t in operators, tree)) < 5:
-        for o in operators:  
-            tree[pos] = o
+    operators = ['/', '-','+', '*']
+    is_operator = lambda t: t in operators
 
-            left = pos * 2
-            right = pos * 2 + 1
+    # Given 6 numbers we can use at most 5 operators
+    if len(filter(is_operator, tree)) >= 5: 
+        return
 
-            for right_child, new_numbers, right_val in generate(numbers, right, tree):
-                for left_child, unused, left_val in generate(new_numbers, left, tree):
+    left = pos * 2
+    right = pos * 2 + 1
 
-                    val = value(left_val, right_val, o) 
-                    if val:
-                        yield left_child, unused, val
+    # For each the left and right child, for each operator recursively
+    # yield the possible combinations of operators
+    for right_child, unused_r, right_val in generate(numbers, right, tree): 
+        for left_child, unused, left_val in generate(unused_r, left, tree):
+            for op in operators:  
+                tree[pos] = op
+
+                # Calculate the value of the tree
+                val = value(left_val, right_val, op) 
+                if val:
+                    yield left_child, unused, val
 
 def value(left_val, right_val, op):
     val = None
@@ -54,7 +62,7 @@ def value(left_val, right_val, op):
             val = left_val / right_val
 
     return val
-                    
+
 
 def main():
     if len(sys.argv) == 8:
@@ -79,17 +87,11 @@ def findsolution(numbers, target):
     numbers.sort(reverse=True)
     trees = generate(numbers)
     
-    num = 0
     for tree, unused, value in trees:
-        num += 1
-        if num % 10000 == 0:
-            print num
-
         if value == target:
             print "Found: " + strtree(tree), value
             return
 
-    print num
         
 
         
