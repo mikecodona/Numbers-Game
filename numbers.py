@@ -19,7 +19,7 @@ def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
     
     for n, i in zip(numbers, xrange(len(numbers))):
         tree[pos] = n 
-        yield tree, numbers[:i] + numbers[i + 1:]
+        yield tree, numbers[:i] + numbers[i + 1:], n
     
     if len(filter(lambda t: t in operators, tree)) < 5:
         for o in operators:  
@@ -28,9 +28,34 @@ def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
             left = pos * 2
             right = pos * 2 + 1
 
-            for right_child, new_numbers in generate(numbers, right, tree):
-                for left_child, unused in generate(new_numbers, left, tree):
-                    yield left_child, unused
+            for right_child, new_numbers, right_val in generate(numbers, right, tree):
+                for left_child, unused, left_val in generate(new_numbers, left, tree):
+
+                    val = value(left_val, right_val, o) 
+                    if val:
+                        yield left_child, unused, val
+
+def value(left_val, right_val, op):
+    val = None
+    if op == '+':
+        # We enfore ordering and left associativity here to cut search space
+        if left_val >= right_val:
+            val = left_val + right_val
+    elif op == '*':
+        # We enfore ordering and left associativity here to cut search space
+        if left_val >= right_val:
+            val = left_val * right_val
+    elif op == '-':
+        # Not allowed negative intermediate result or 0
+        if left_val > right_val:
+            val = left_val - right_val
+    elif op == '/':
+        if right_val > 0 and left_val % right_val == 0:
+            val = left_val / right_val
+
+    return val
+                    
+
 
 def left(i):
     return i * 2
@@ -65,9 +90,8 @@ def findsolution(numbers, target):
     trees = generate(numbers)
     
     num = 0
-    for tree, unused in trees:
+    for tree, unused, value in trees:
         num += 1
-        value = evaltree(tree)
         if num % 10000 == 0:
             print num
 
