@@ -1,82 +1,41 @@
 from datetime import datetime
 import sys, time
 
-class Tree(object):
-    operators = ['/', '-','+', '*']
-    pos = 1
-    tree = tree=[None] * (pow(2, 6))
-    depth = 0 
+def strtree(tree, pos=1):
+    current_node = tree[pos]
 
-    def __init__(self, max_depth=6):
-        self.max_depth = max_depth
+    left = pos * 2
+    right = pos * 2 + 1
+     
+    if type(current_node) == type(1):
+        return str(current_node)
+    elif current_node in ['+', '-', '*', '/']:
+        return ("(" + strtree(tree, left) + " " 
+                + current_node + " " 
+                + strtree(tree,  right) + ")")
 
-    def __str__(self):
-        if type(self.value()) == type(1):
-            return str(self.value())
-        elif current_node in ['+', '-', '*', '/']:
-            return ("(" + str(self.left()) + " " 
-                    + self.value() + " " 
-                    + str(self.right()) + ")")
-
-    def num_ops(self):
-        operators = ['/', '-','+', '*']
-        is_operator = lambda t: t in operators
-
-        # Given 6 numbers we can use at most 5 operators
-
-        return len(filter(is_operator, self.tree))
-
-    def _clone(self):
-        clone = Tree()
-        clone.tree = self.tree
-        clone.depth = self.tree
-
-        return clone
-
-    def parent(self):
-        parent = self._clone()
-        parent.pos = self.pos / 2
-
-        return parent
-
-    def left(self):
-        left = self._clone()
-        left.pos = self.pos * 2
-
-        return left
-
-    def right(self):
-        right = self._clone()
-        right.pos = self.pos * 2 + 1
-
-        return right
-
-    def value(self):
-        return self.tree[self.pos]
-
-    def store(self, value):
-        self.tree[self.pos] = value
-
-
-def generate(numbers, tree=Tree()):
-
+def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
     # First yield all the numbers
     for n, i in zip(numbers, xrange(len(numbers))):
-        tree.store(n) 
+        tree[pos] = n 
         yield tree, numbers[:i] + numbers[i + 1:], n
     
     operators = ['/', '-','+', '*']
+    is_operator = lambda t: t in operators
 
     # Given 6 numbers we can use at most 5 operators
-    if tree.num_ops() >= 5: 
+    if len(filter(is_operator, tree)) >= 5: 
         return
+
+    left = pos * 2
+    right = pos * 2 + 1
 
     # For each the left and right child, for each operator recursively
     # yield the possible combinations of operators
-    for right_child, unused_r, right_val in generate(numbers, tree.right()): 
-        for left_child, unused, left_val in generate(unused_r, tree.left()):
+    for right_child, unused_r, right_val in generate(numbers, right, tree): 
+        for left_child, unused, left_val in generate(unused_r, left, tree):
             for op in operators:  
-                tree.store(op) 
+                tree[pos] = op
 
                 # Calculate the value of the tree
                 val = value(left_val, right_val, op) 
@@ -128,7 +87,7 @@ def findsolution(numbers, target):
     
     for tree, unused, value in trees:
         if value == target:
-            print "Found: " + str(tree), value
+            print "Found: " + strtree(tree), value
             return
 
 def distance(value, target):
