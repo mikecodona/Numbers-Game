@@ -16,7 +16,7 @@ def strtree(tree, pos=1):
 
 def generate(numbers, pos=1, tree=[None] * (pow(2, 6))):
     # First yield all the numbers
-    for n, i in zip(numbers, xrange(len(numbers))):
+    for n, i in enumerate(numbers):
         tree[pos] = n 
         yield tree, numbers[:i] + numbers[i + 1:], n
     
